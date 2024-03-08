@@ -3,14 +3,14 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
-*.ipr
+
+# intellij IDE files
+**/*.iml
+**/.idea/
+**/*.log
+**/*.ipr
+**/*.iws
+
 
 ### Eclipse ###
 .apt_generated
