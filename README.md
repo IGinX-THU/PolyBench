@@ -20,17 +20,9 @@
 数据清洗的目标为找出这些破坏了Functional Dependencies的重复的 zipcode 👉 state 映射
 
 ### 数据
-一张表，包含两列，分别为zipcode和state，均为int类型
+一张表，包含三列，分别为key,zipcode和state，均为int类型
 
 ### 测试方法
-
-1. 通过python脚本生成csv
-    ```shell
-    python3 dataCleaning/gen_data.py -n xxx # -n 后面接行数？
-    ```
-2. 导入Postgres
-   TODO
-3. 查询方法
    [数据清洗说明文档](dataCleaning/README.md)
 
 ## TPC-H
