@@ -45,4 +45,40 @@ TODO
 
 ## Pagerank
 
-TODO
+### 数据
+[数据来源](https://snap.stanford.edu/data/web-Google.html)
+
+一张表，包含两列，分别为fromnode和tonode，代表有向边的起始点和终点，均为int类型。
+
+### 测试方法
+1. 从网站上下载并处理数据
+   ```shell
+   ./getData.sh
+   ```
+2. 导入Postgres数据库
+
+   ```postgresql
+   CREATE TABLE IF NOT EXISTS pagerankall (
+      fromnode INT,
+      tonode INT
+   );
+   \copy pagerankall from '/Users/janet/Desktop/Polystore-utils/Pagerank/web-google.csv'  DELIMITER ',' CSV HEADER;
+   ```
+   如果`\copy`导入时报错需要执行：
+   ```shell
+   dos2unix web-google.csv
+   ```
+
+3. 查询方法
+
+   以刚导入数据的Postgres引擎启动IGinX，将`IGinX/conf/config.properties`配置为
+
+   ```
+   storageEngineList=127.0.0.1#5432#postgresql#username=postgres#password=postgres#has_data=true
+   ```
+   
+   在iginx中执行如下sql语句：
+   ```sql
+   REGISTER UDSF PYTHON TASK "UDSFpagerankall" IN  "/Users/janet/Desktop/spark/udsf_pagerankall.py" AS "pagerankall";
+   select * from (select pagerankall(key, fromnode, tonode) as pagerankall from postgres.pagerankall) order by pagerankall desc limit 100;
+   ```

@@ -21,6 +21,12 @@ target/
 .springBeans
 .sts4-cache
 
+### 生成的测试数据 ###
+gavel/generatedData/
+dataCleaning/zipcode_city.csv
+tpcDataGenerator/data/
+Pagerank/web-Google.csv
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

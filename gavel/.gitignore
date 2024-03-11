@@ -2,12 +2,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-generatedData/auction.csv
-generatedData/bid.csv
-generatedData/category.csv
-generatedData/picture.csv
-generatedData/user.csv
-dataCleaning/zipcode_city.csv
+
 
 
 ### IntelliJ IDEA ###
