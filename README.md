@@ -41,7 +41,74 @@ tpch benchmark
 
 ## SGD
 
-TODO
+### 数据
+
+[数据来源](https://archive.ics.uci.edu/dataset/280/higgs)
+
+一张表，共29列，其中第一列是标签label， 之后是特征。
+前 21 个特征（第 2-22 列）是加速器中粒子探测器测量到的运动特性。最后七个特征是前 21 个特征的函数，均为float类型
+
+数据量大，有1100万行
+
+### 测试方法
+
+1. 从网站上下载并处理数据
+   ```shell
+   cd SGD
+   ./getData.sh
+   # 如果想只保留前x行并写入HIGGS2.csv，可以执行：
+   cat HIGGS.csv | head -n x > HIGGS2.csv
+   ```
+2. 导入Postgres数据库
+
+   ```postgresql
+   CREATE TABLE higgstrainall (
+    label INT,
+    lepton_pt FLOAT,
+    lepton_eta FLOAT,
+    lepton_phi FLOAT,
+    missing_energy_magnitude FLOAT,
+    missing_energy_phi FLOAT,
+    jet1_pt FLOAT,
+    jet1_eta FLOAT,
+    jet1_phi FLOAT,
+    jet1_b_tag FLOAT,
+    jet2_pt FLOAT,
+    jet2_eta FLOAT,
+    jet2_phi FLOAT,
+    jet2_b_tag FLOAT,
+    jet3_pt FLOAT,
+    jet3_eta FLOAT,
+    jet3_phi FLOAT,
+    jet3_b_tag FLOAT,
+    jet4_pt FLOAT,
+    jet4_eta FLOAT,
+    jet4_phi FLOAT,
+    jet4_b_tag FLOAT,
+    m_jj FLOAT,
+    m_jjj FLOAT,
+    m_lv FLOAT,
+    m_jlv FLOAT,
+    m_bb FLOAT,
+    m_wbb FLOAT,
+    m_wwbb FLOAT
+   );
+   \copy "higgstrainall"   from '/Users/janet/Desktop/Polystore-utils/SGD/HIGGS.csv'    DELIMITER ',' CSV;
+   ```
+
+3. 查询方法
+
+   以刚导入数据的Postgres引擎启动IGinX，将`IGinX/conf/config.properties`配置为
+
+   ```
+   storageEngineList=127.0.0.1#5432#postgresql#username=postgres#password=postgres#has_data=true
+   ```
+
+   在iginx中执行如下sql语句：
+   ```sql
+   REGISTER UDAF PYTHON TASK "UDAFtrainall" IN "/Users/janet/Desktop/Polystore-utils/SGD/udaf_trainall.py" AS "trainall";
+   select  trainall(key,label,lepton_pt,lepton_eta,lepton_phi,missing_energy_magnitude,missing_energy_phi,jet1_pt,jet1_eta,jet1_phi,jet1_b_tag,jet2_pt,jet2_eta,jet2_phi,jet2_b_tag,jet3_pt,jet3_eta,jet3_phi,jet3_b_tag,jet4_pt,jet4_eta,jet4_phi,jet4_b_tag,m_jj,m_jjj,m_lv,m_jlv,m_bb,m_wbb,m_wwbb, 1) from mongotpch.higgstrainall;
+   ```
 
 ## Pagerank
 
@@ -79,6 +146,6 @@ TODO
    
    在iginx中执行如下sql语句：
    ```sql
-   REGISTER UDSF PYTHON TASK "UDSFpagerankall" IN  "/Users/janet/Desktop/spark/udsf_pagerankall.py" AS "pagerankall";
+   REGISTER UDSF PYTHON TASK "UDSFpagerankall" IN  "/Users/janet/Desktop/Polystore-utils/Pagerank/udsf_pagerankall.py" AS "pagerankall";
    select * from (select pagerankall(key, fromnode, tonode) as pagerankall from postgres.pagerankall) order by pagerankall desc limit 100;
    ```

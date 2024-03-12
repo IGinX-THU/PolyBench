@@ -26,6 +26,8 @@ gavel/generatedData/
 dataCleaning/zipcode_city.csv
 tpcDataGenerator/data/
 Pagerank/web-Google.csv
+SGD/HIGGS.csv
+tpc/
 
 ### NetBeans ###
 /nbproject/private/
