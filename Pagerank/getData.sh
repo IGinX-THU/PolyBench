@@ -20,7 +20,17 @@ echo "操作完成"
 
 # 可能需要执行：
 # dos2unix web-google.csv
-
+# 获取操作系统类型
+os_type=$(uname -s)
+# 判断操作系统类型
+if [ "$os_type" == "Linux" ] || [ "$os_type" == "Darwin" ] || [ "$os_type" == "FreeBSD" ] || [ "$os_type" == "SunOS" ]; then
+    echo "当前系统是Unix/Linux/Mac系统，执行dos2unix命令"
+    dos2unix web-google.csv
+elif [ "$os_type" == "CYGWIN_NT-10.0" ] || [ "$os_type" == "MINGW32_NT-6.1" ]; then
+    echo "当前系统是Windows系统，不需要执行dos2unix命令"
+else
+    echo "未知的操作系统类型"
+fi
 
 
 

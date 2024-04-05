@@ -22,4 +22,4 @@ cities = ['city' + str(i) for i in range(args.lineNum)]
 zipcodes = zipcodes + [zipcodes[i] for i in range(args.lineNum // 10)]
 with open('dataCleaning/zipcode_city.csv', 'w') as f:
     for i in range(args.lineNum):
-        f.write(str(i) + ',' + str(zipcodes[i]) + ',' + cities[i] + '\n')
+        f.write(str(i) + ',' + cities[i] + ',' + str(zipcodes[i]) + '\n')
