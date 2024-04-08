@@ -25,9 +25,74 @@ jobs:
           ]
     runs-on: ${{ matrix.os }}
 
+
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - name: Environment dependence
+        uses: ./.github/actions/dependence
+        with:
+          python-version: ${{ matrix.python-version }}
+          java: ${{ matrix.java }}
 
       - name: Print DB name
         run: echo ${{ matrix.DB-name }}
+
+      - name: Run ZooKeeper
+        uses: ./.github/actions/zookeeperRunner
+
+      - name: Run DB
+        uses: ./.github/actions/dbRunner
+        with:
+          DB-name: ${{ matrix.DB-name }}
+
+      - name: Install IGinX with Maven
+        shell: bash
+        run: |
+          wget https://github.com/IGinX-THU/IGinX/archive/refs/heads/main.zip
+          unzip main.zip
+          cd IGinX-main
+          mvn clean package -DskipTests -P-format -q
+
+      # 第 1 阶段测试开始==========================================
+      - name: Prepare CapExp environment oriHasDataExpHasData
+        uses: ./.github/actions/capacityExpansionUnionTest
+        with:
+          version: ${VERSION}
+          DB-name: ${{ matrix.DB-name }}
+          Test-Way: oriHasDataExpHasData
+
+      - name: oriHasDataExpHasData IT
+        shell: bash
+        run: |
+          mvn test -q -Dtest=${{ matrix.DB-name }}CapacityExpansionIT#oriHasDataExpHasData -DfailIfNoTests=false -P-format
+
+      - name: Clear history data
+        uses: ./.github/actions/dbWriter
+        with:
+          DB-name: ${{ matrix.DB-name }}
+          Test-Way: clearHistoryData
+
+      - name: oriHasDataExpHasData Normal IT
+        shell: bash
+        run: |
+          mvn test -q -Dtest=${FUNCTEST} -DfailIfNoTests=false -P-format
+
+      - name: Start IGinX
+        uses: ./.github/actions/iginxRunner
+
+      - name: Test DataCleaning
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            chmod +x "${GITHUB_WORKSPACE}/.github/scripts/test/cli/test_dataCleaning.sh"
+            "${GITHUB_WORKSPACE}/.github/scripts/test/cli/test_dataCleaning.sh"
+          else
+            echo "$RUNNER_OS is not supported"
+            exit 0
+          fi
+
+      - name: Show IGinX log
+        if: always()
+        shell: bash
+        run: |
+          cat IGinX-main/iginx-*.log
