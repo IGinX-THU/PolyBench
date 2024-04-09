@@ -14,6 +14,7 @@ runs:
           run: |
               wget https://github.com/IGinX-THU/IGinX/archive/refs/heads/main.zip
               unzip main.zip
+              pwd
 
         - if: inputs.DB-name=='InfluxDB'
           name: Run DB
@@ -55,7 +56,7 @@ runs:
           name: Run DB
           shell: bash
           run: |
-              cp -f "${GITHUB_WORKSPACE}/IGinX-main/conf/config.properties" "${GITHUB_WORKSPACE}/IGinX-main/conf/config.properties.bak"
+              cp -f "IGinX-main/conf/config.properties" "IGinX-main/conf/config.properties.bak"
               if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "Windows" ]]; then
                 chmod +x "${GITHUB_WORKSPACE}/.github/scripts/dataSources/parquet_linux_windows.sh"
                 "${GITHUB_WORKSPACE}/.github/scripts/dataSources/parquet_linux_windows.sh" 6667 6888 test/mn test/iginx_mn false false conf/config.properties
@@ -89,7 +90,7 @@ runs:
           name: Run DB
           shell: bash
           run: |
-              cp -f "${GITHUB_WORKSPACE}/IGinX-main/conf/config.properties" "${GITHUB_WORKSPACE}/IGinX-main/conf/config.properties.bak"
+              cp -f "IGinX-main/conf/config.properties" "IGinX-main/conf/config.properties.bak"
               if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "Windows" ]]; then
                 chmod +x "${GITHUB_WORKSPACE}/.github/scripts/dataSources/filesystem_linux_windows.sh"
                 "${GITHUB_WORKSPACE}/.github/scripts/dataSources/filesystem_linux_windows.sh" 6667 6888 test/mn test/iginx_mn false false conf/config.properties
