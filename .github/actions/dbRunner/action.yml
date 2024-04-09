@@ -12,6 +12,7 @@ runs:
         - name: Download IGinX
           shell: bash
           run: |
+              pwd
               wget https://github.com/IGinX-THU/IGinX/archive/refs/heads/main.zip
               unzip main.zip
               pwd
