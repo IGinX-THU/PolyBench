@@ -48,8 +48,6 @@ jobs:
       - name: Install IGinX with Maven
         shell: bash
         run: |
-          wget https://github.com/IGinX-THU/IGinX/archive/refs/heads/main.zip
-          unzip main.zip
           cd IGinX-main
           mvn clean package -DskipTests -P-format -q
 

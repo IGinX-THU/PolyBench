@@ -9,6 +9,12 @@ inputs:
 runs:
     using: "composite" # Mandatory parameter
     steps:
+        - name: Download IGinX
+          shell: bash
+          run: |
+              wget https://github.com/IGinX-THU/IGinX/archive/refs/heads/main.zip
+              unzip main.zip
+
         - if: inputs.DB-name=='InfluxDB'
           name: Run DB
           shell: bash
