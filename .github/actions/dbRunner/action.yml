@@ -57,6 +57,8 @@ runs:
           name: Run DB
           shell: bash
           run: |
+              find / -name "IGinX-main" -type d
+              cat "$IGinX-main/conf/config.properties"
               cp -f "IGinX-main/conf/config.properties" "IGinX-main/conf/config.properties.bak"
               if [[ "$RUNNER_OS" == "Linux" || "$RUNNER_OS" == "Windows" ]]; then
                 chmod +x "${GITHUB_WORKSPACE}/.github/scripts/dataSources/parquet_linux_windows.sh"
